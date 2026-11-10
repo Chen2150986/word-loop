@@ -1,0 +1,271 @@
+/* ==========================================================
+   错题本 · 四级高频词  —  样式表
+   ----------------------------------------------------------
+   这个文件只管"长什么样"，不管"怎么算"。
+   想换颜色：只改 :root 里那几个变量，全站会一起变。
+   想换字体：改 --serif / --sans。
+   ========================================================== */
+
+:root{
+  /* —— 四个主色。改成你喜欢的就行 —— */
+  --paper:#F1F2EF;      /* 页面底色：偏冷一点的纸白 */
+  --card:#FFFFFF;       /* 卡片：纯白，像一张纸放在桌上 */
+  --ink:#181A19;        /* 正文墨色 */
+  --muted:#6C7069;      /* 次要文字 */
+
+  /* —— 判分色 —— */
+  --red:#BE3E27;        /* 批改红：错 */
+  --red-soft:#F6E3DE;
+  --green:#2A6252;      /* 对勾青：对 */
+  --green-soft:#DFEAE4;
+
+  --line:#D3D6CE;       /* 分隔线 */
+
+  /* —— 字体。全部用系统自带，不联网下载，所以永远不会加载失败 —— */
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Songti SC",Georgia,serif;
+  --sans:-apple-system,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"Cascadia Mono",Consolas,"SF Mono",monospace;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper);color:var(--ink);font-family:var(--sans);
+  font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ===== 顶栏 ===== */
+.top{
+  position:sticky;top:0;z-index:20;
+  display:flex;align-items:center;gap:10px;
+  padding:8px 14px;background:var(--paper);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}
+.mark{
+  flex:0 0 auto;width:24px;height:24px;display:grid;place-items:center;
+  border:1px solid var(--red);color:var(--red);
+  font-family:var(--serif);font-size:14px;line-height:1;
+}
+.brand-txt{display:flex;flex-direction:column;line-height:1.15}
+.brand-name{font-family:var(--serif);font-size:15px;letter-spacing:.02em}
+.brand-sub{font-size:10px;letter-spacing:.14em;color:var(--muted)}
+.tabs{margin-left:auto;display:flex;gap:0}
+.tab{
+  appearance:none;border:0;background:none;cursor:pointer;
+  font-size:13px;color:var(--muted);
+  padding:11px 11px;min-height:44px;      /* 44px 是手指好按的最低尺寸 */
+  border-bottom:2px solid transparent;
+}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--red)}
+.tab:hover{color:var(--ink)}
+
+/* ===== 布局 ===== */
+main{max-width:680px;margin:0 auto;padding:14px 14px 32px}
+.view{display:flex;flex-direction:column;gap:14px}
+.view[hidden]{display:none}
+
+/* ===== 卡头上方的小行 ===== */
+.hud{display:flex;align-items:baseline;gap:10px;font-size:12px;color:var(--muted)}
+.hud .n{font-family:var(--mono);font-size:12px;letter-spacing:.04em}
+.hud .mode{margin-left:auto;font-size:11px;letter-spacing:.12em}
+
+/* ===== 答题卡 ===== */
+.card{
+  position:relative;background:var(--card);
+  border:1px solid var(--line);border-radius:2px;
+  box-shadow:0 1px 2px rgba(24,26,25,.06);
+  padding:24px 20px 20px;
+  min-height:320px;
+  display:flex;flex-direction:column;gap:16px;
+}
+/* 右上角那个像考卷题号的角标 */
+.qnum{
+  position:absolute;top:0;right:0;
+  padding:5px 9px;font-family:var(--mono);font-size:11px;color:var(--muted);
+  border-left:1px solid var(--line);border-bottom:1px solid var(--line);
+  background:var(--paper);
+}
+.plabel{font-size:10px;letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.prompt{
+  margin:0;font-family:var(--serif);font-weight:400;
+  font-size:clamp(34px,9.5vw,54px);line-height:1.12;letter-spacing:-.015em;
+  word-break:break-word;
+}
+/* 中文做题目时换成正文字体，字号小一些 */
+.prompt.is-cn{
+  font-family:var(--sans);font-weight:600;
+  font-size:clamp(19px,5.2vw,26px);line-height:1.5;letter-spacing:0;
+}
+.pos-tag{display:inline-block;font-family:var(--serif);font-style:italic;font-size:13px;color:var(--muted);margin-left:2px}
+
+/* ===== 作答区 ===== */
+.answer{display:flex;flex-direction:column;gap:9px;margin-top:auto}
+.opt{
+  appearance:none;text-align:left;cursor:pointer;
+  background:#fff;border:1px solid var(--line);border-radius:2px;
+  padding:13px 14px;min-height:50px;
+  font-size:15px;line-height:1.45;color:var(--ink);
+  transition:border-color .12s ease,background .12s ease,color .12s ease;
+}
+.opt:hover:not(:disabled){border-color:#a8ac9f;background:#FBFAF7}
+.opt:disabled{cursor:default}
+.opt.is-right{border-color:var(--green);background:var(--green-soft);color:var(--green);font-weight:600}
+.opt.is-wrong{border-color:var(--red);background:var(--red-soft);color:var(--red)}
+
+/* 拼写题输入框 */
+.spell{display:flex;gap:8px;flex-wrap:wrap}
+.spell input{
+  flex:1;min-width:0;
+  font-family:var(--serif);font-size:19px;
+  padding:12px 13px;min-height:50px;
+  border:1px solid var(--line);border-radius:2px;
+  background:#fff;color:var(--ink);outline:none;
+}
+.spell input:focus{border-color:var(--ink)}
+.spell input[readonly]{background:var(--paper)}
+
+.btn{
+  appearance:none;cursor:pointer;border-radius:2px;
+  border:1px solid var(--ink);background:var(--ink);color:#fff;
+  padding:13px 18px;min-height:50px;font-size:14px;
+}
+.btn:disabled{opacity:.35;cursor:default}
+.btn.ghost{background:#fff;color:var(--ink);border-color:var(--line)}
+.btn.ghost:hover{border-color:#a8ac9f}
+.btn.sm{padding:8px 12px;min-height:38px;font-size:12px}
+
+/* ===== 判分：那道红叉 / 青勾 ===== */
+.verdict{
+  display:flex;align-items:flex-start;gap:12px;
+  border-top:1px solid var(--line);padding-top:14px;
+}
+.verdict[hidden]{display:none}
+.stamp{flex:0 0 auto;width:46px;height:46px}
+.stamp path{
+  fill:none;stroke-width:4.5;stroke-linecap:round;stroke-linejoin:round;
+  stroke-dasharray:120;stroke-dashoffset:120;
+  animation:draw .38s cubic-bezier(.25,.8,.3,1) forwards;   /* 像笔一笔画出来 */
+}
+@keyframes draw{to{stroke-dashoffset:0}}
+.vtext{display:flex;flex-direction:column;gap:3px;min-width:0}
+.vhead{font-size:15px;font-weight:600}
+.vbody{font-size:13.5px;line-height:1.55;color:#3B3E39}
+.vbody b{font-family:var(--serif);font-size:15px;color:var(--ink)}
+.vextra{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+
+/* ===== 底部进度 ===== */
+.foot{display:flex;flex-direction:column;gap:7px}
+.progress{height:3px;background:var(--line);overflow:hidden}
+.progress i{display:block;height:100%;background:var(--ink);transition:width .28s ease}
+.foot-row{display:flex;align-items:center;gap:10px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.foot-row .right{margin-left:auto}
+
+/* ===== 工具条（搜索、新增） ===== */
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.tools input[type=search],.tools input[type=text]{
+  flex:1;min-width:120px;font-size:16px;      /* 16px 以上，手机上点进去不会自动放大 */
+  padding:10px 12px;min-height:44px;
+  border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--ink);outline:none;
+}
+.tools input:focus{border-color:var(--ink)}
+
+/* ===== 词库列表 ===== */
+.lib{background:var(--card);border:1px solid var(--line);border-radius:2px}
+.lib-head{
+  display:flex;align-items:center;gap:10px;padding:9px 13px;
+  border-bottom:1px solid var(--line);background:var(--paper);
+  font-size:10.5px;letter-spacing:.14em;color:var(--muted);
+}
+.lib-head .h2{margin-left:auto;font-variant-numeric:tabular-nums}
+.lib-row{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;
+  padding:11px 13px;border-bottom:1px solid #EDEEE9;
+}
+.lib-row:last-child{border-bottom:0}
+.lib-w{font-family:var(--serif);font-size:17px;min-width:106px;flex:0 0 auto}
+.lib-w em{font-style:italic;font-size:12px;color:var(--muted)}
+.lib-cn{flex:1 1 140px;min-width:0;font-size:13.5px;color:#3B3E39}
+.lib-meta{
+  display:flex;align-items:center;gap:9px;margin-left:auto;
+  font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums;
+}
+/* 5 格熟练度小条 */
+.pips{display:inline-flex;gap:2px}
+.pips i{width:9px;height:3px;background:var(--line);display:block}
+.pips i.on{background:var(--ink)}
+.pips i.on.hard{background:var(--red)}
+.del{
+  appearance:none;border:0;background:none;cursor:pointer;
+  width:32px;height:32px;display:grid;place-items:center;color:var(--muted);
+  border-radius:2px;
+}
+.del:hover{color:var(--red);background:var(--red-soft)}
+.del svg{width:13px;height:13px}
+
+/* ===== 空态 ===== */
+.empty{padding:36px 16px;text-align:center;color:var(--muted);font-size:13.5px;line-height:1.7}
+.empty b{display:block;font-family:var(--serif);font-size:17px;color:var(--ink);margin-bottom:5px;font-weight:400}
+
+/* ===== 批量导入面板 ===== */
+.panel{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:14px;display:flex;flex-direction:column;gap:10px}
+.panel[hidden]{display:none}
+.panel label{font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.panel textarea{
+  width:100%;min-height:120px;resize:vertical;
+  font-family:var(--mono);font-size:13px;line-height:1.7;
+  padding:11px 12px;border:1px solid var(--line);border-radius:2px;
+  background:#fff;color:var(--ink);outline:none;
+}
+.panel textarea:focus{border-color:var(--ink)}
+.panel .note{font-size:12px;color:var(--muted);line-height:1.6}
+
+/* ===== 进度页 ===== */
+.grid4{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}
+.cell{background:var(--card);padding:15px 14px;display:flex;flex-direction:column;gap:3px}
+.cell .lab{font-size:10.5px;letter-spacing:.14em;color:var(--muted)}
+.cell .val{font-family:var(--serif);font-size:29px;line-height:1.1;font-variant-numeric:tabular-nums}
+
+.block{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:15px 14px;display:flex;flex-direction:column;gap:11px}
+.block .bt{font-size:10.5px;letter-spacing:.14em;color:var(--muted);display:flex;align-items:center;gap:8px}
+.block .bt span{margin-left:auto;letter-spacing:0;font-variant-numeric:tabular-nums}
+
+/* 熟练度分布条 */
+.dist{display:flex;flex-direction:column;gap:7px}
+.drow{display:grid;grid-template-columns:52px 1fr 32px;align-items:center;gap:9px;font-size:11.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.dbar{height:6px;background:#EDEEE9;position:relative}
+.dbar i{position:absolute;left:0;top:0;bottom:0;background:var(--ink)}
+.dbar i.hard{background:var(--red)}
+
+.hardrow{display:flex;align-items:baseline;gap:10px;font-size:13px;padding:6px 0;border-bottom:1px dotted #E3E5DE}
+.hardrow:last-child{border-bottom:0}
+.hardrow .w{font-family:var(--serif);font-size:15px;min-width:104px}
+.hardrow .c{flex:1;min-width:0;color:#3B3E39;font-size:12.5px}
+.hardrow .n{font-size:11px;color:var(--red);font-variant-numeric:tabular-nums;flex:0 0 auto}
+
+/* ===== 底部提示条 ===== */
+.toast{
+  position:fixed;left:50%;bottom:24px;transform:translate(-50%,10px);
+  background:var(--ink);color:#fff;font-size:13px;
+  padding:10px 15px;border-radius:2px;opacity:0;pointer-events:none;
+  transition:opacity .2s ease,transform .2s ease;z-index:60;max-width:84vw;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ===== 桌面宽屏：只在 768px 以上追加，手机那套先写 ===== */
+@media (min-width:768px){
+  .top{padding:10px 26px}
+  main{padding:24px 20px 48px}
+  .card{padding:30px 30px 26px;min-height:360px}
+  .grid4{grid-template-columns:repeat(4,1fr)}
+  .lib-w{min-width:140px}
+  .opt{padding:14px 16px;font-size:15.5px}
+}
+
+/* 系统里开了"减少动态效果"的人，就不给他看动画 */
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms !important;transition-duration:.001ms !important}
+}
