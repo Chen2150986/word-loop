@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>错题本 · 四级高频词</title>
+<!-- 网页图标：一个红叉。data: 开头表示图标内容直接写在这里，不需要另存图片文件 -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23F1F2EF'/%3E%3Cpath d='M8 8 L24 24 M24 8 L8 24' stroke='%23BE3E27' stroke-width='3'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ==========================================================
+     顶栏：左边是名字，右边三个切换页
+     ========================================================== -->
+<header class="top">
+  <div class="brand">
+    <span class="mark">错</span>
+    <span class="brand-txt">
+      <span class="brand-name">错题本</span>
+      <span class="brand-sub">CET-4 · 高频</span>
+    </span>
+  </div>
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" data-view="review" aria-selected="true">背</button>
+    <button class="tab" role="tab" data-view="library" aria-selected="false">词库</button>
+    <button class="tab" role="tab" data-view="stats" aria-selected="false">进度</button>
+  </nav>
+</header>
+
+<main>
+
+<!-- ==========================================================
+     视图一：背
+     这张卡的所有内容都是 app.js 填进来的，这里只是空架子
+     ========================================================== -->
+<section class="view" id="view-review">
+  <div class="hud">
+    <span class="n" id="hud-n">01</span>
+    <span id="hud-left">本轮剩 20</span>
+    <span class="mode" id="hud-mode">英 → 中</span>
+  </div>
+
+  <div class="card" id="card">
+    <span class="qnum" id="qnum">Q01</span>
+    <div class="plabel" id="plabel">选出正确的意思</div>
+    <p class="prompt" id="prompt">abandon</p>
+    <div class="answer" id="answer"></div>
+
+    <!-- 判分区：答完才显示。那个 svg 就是红叉/青勾 -->
+    <div class="verdict" id="verdict" hidden>
+      <svg class="stamp" id="stamp" viewBox="0 0 60 60" aria-hidden="true"></svg>
+      <div class="vtext">
+        <span class="vhead" id="vhead"></span>
+        <span class="vbody" id="vbody"></span>
+        <span class="vextra" id="vextra"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="progress"><i id="bar" style="width:0%"></i></div>
+    <div class="foot-row">
+      <span id="foot-l">本轮 0 / 20</span>
+      <span class="right" id="foot-r">对 0 · 错 0</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     视图二：词库
+     ========================================================== -->
+<section class="view" id="view-library" hidden>
+
+  <div class="tools">
+    <input type="search" id="search" placeholder="搜单词或中文意思" autocomplete="off">
+    <button class="btn sm ghost" id="btn-import">批量导入</button>
+  </div>
+
+  <div class="tools">
+    <input type="text" id="nw" placeholder="单词" autocomplete="off" style="flex:1 1 90px">
+    <input type="text" id="nc" placeholder="释义" autocomplete="off" style="flex:2 1 150px">
+    <button class="btn sm" id="btn-add">加进去</button>
+  </div>
+
+  <div class="panel" id="panel" hidden>
+    <label for="bulk">每行一个：单词 + 空格/逗号 + 释义</label>
+    <textarea id="bulk" placeholder="abandon 放弃&#10;absorb 吸收&#10;abstract,抽象的"></textarea>
+    <div class="note">例：<code>abandon 放弃；抛弃</code>　也支持逗号或制表符分隔。已有的单词会跳过。</div>
+    <div class="tools">
+      <button class="btn sm" id="btn-bulk-add">导入这些</button>
+      <button class="btn sm ghost" id="btn-bulk-close">收起</button>
+      <span class="note" id="note-tip" style="margin-left:auto"></span>
+    </div>
+  </div>
+
+  <div class="lib">
+    <div class="lib-head">
+      <span>单词</span><span>释义</span>
+      <span class="h2" id="lib-count">0 个</span>
+    </div>
+    <div id="lib-list"></div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     视图三：进度
+     ========================================================== -->
+<section class="view" id="view-stats" hidden>
+  <div class="grid4">
+    <div class="cell"><span class="lab">总词数</span><span class="val" id="s-total">0</span></div>
+    <div class="cell"><span class="lab">已掌握</span><span class="val" id="s-master">0</span></div>
+    <div class="cell"><span class="lab">待复习</span><span class="val" id="s-due">0</span></div>
+    <div class="cell"><span class="lab">今日已答</span><span class="val" id="s-today">0</span></div>
+  </div>
+
+  <div class="block">
+    <div class="bt">熟练度分布<span id="s-acc">正确率 —</span></div>
+    <div class="dist" id="dist"></div>
+  </div>
+
+  <div class="block">
+    <div class="bt">最拖后腿的词<span>错了多少次</span></div>
+    <div id="hardlist"></div>
+  </div>
+
+  <div class="block">
+    <div class="bt">数据</div>
+    <div class="note" style="font-size:12.5px;color:var(--muted);line-height:1.7">
+      所有记录只存在这台电脑的这个浏览器里。换浏览器、清缓存会丢，建议定期导出备份。
+    </div>
+    <div class="tools">
+      <button class="btn sm ghost" id="btn-export">导出备份</button>
+      <button class="btn sm ghost" id="btn-reset">清空重置</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<!-- 先读词库，再跑逻辑；顺序不能反 -->
+<script src="words-data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
